@@ -234,7 +234,12 @@ function install_packages_1() {
     exclaim 'Updating dependencies (part 1a)...'
     pkg_update
     exclaim 'Installing dependencies (part 1b)...'
-    pkg_install git-core kvm-pxe ubuntu-vm-builder
+    GetOSVersion
+    if [[ "$os_RELEASE" = "12.04" ]]; then
+        pkg_install git-core kvm-ipxe ubuntu-vm-builder
+    else
+        pkg_install git-core kvm-pxe ubuntu-vm-builder
+    fi
 }
 
 
@@ -782,12 +787,12 @@ EOF
     screen -d -m -S reddwarf -t reddwarf
     sleep 1
 
-    screen_it reddwarf "cd $PATH_REDDWARF; bin/reddwarf-server --config-file=/tmp/reddwarf.conf.sample"
+    screen_it reddwarf "cd $PATH_REDDWARF; bin/reddwarf-server --config-file=etc/reddwarf/reddwarf.conf.sample"
 }
 
 function cmd_run() {
     cd $PATH_REDDWARF; bin/reddwarf-server \
-        --config-file=/tmp/reddwarf.conf.sample $@
+        --config-file=etc/reddwarf/reddwarf.conf.sample $@
 }
 
 function cmd_run_fake() {
@@ -859,12 +864,12 @@ function cmd_nova_client() {
         nova --auth_url=http://localhost:35357/v2.0 \
             --tenant_name=reddwarf --username=radmin --password=radmin \
             --service_type=compute --region_name=RegionOne \
-            --service_name='Compute Service' --version=2 $@
+            --service_name='Compute Service' $@
     else
         nova --auth_url=http://localhost:35357/v2.0 \
             --tenant_name=reddwarf --username=radmin --password=radmin \
             --service_type=volume --region_name=RegionOne \
-            --service_name='Volume Service' --version=2 $@
+            --service_name='Volume Service' $@
     fi
 }
 
