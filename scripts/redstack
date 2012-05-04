@@ -726,7 +726,7 @@ function fix_rd_configfile() {
 
 function rd_manage() {
     cd $PATH_REDDWARF
-    bin/reddwarf-manage --config-file=/tmp/reddwarf.conf.sample $@
+    bin/reddwarf-manage --config-file=etc/reddwarf/reddwarf.conf.sample $@
 }
 
 function mod_test_conf() {
